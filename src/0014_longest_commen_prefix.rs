@@ -17,7 +17,7 @@ fn run<'a>(arr: &'a [&'a str]) -> &'a str {
     if min_size == 0 {
         ""
     } else {
-        let mut first_str: char;
+        let mut first_str: char; 
         let mut okay: bool = true;
         loop {
             first_str = arr[0].chars().nth(count).unwrap();

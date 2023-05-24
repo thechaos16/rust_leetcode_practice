@@ -6,6 +6,9 @@ fn main () {
 }
 
 fn is_ugly(n: i32) -> bool {
+    if n == 0 {
+        return false;
+    }
     let mut res = n;
     while res % 2 == 0 {
         res /= 2;
