@@ -15,7 +15,7 @@ fn top_k_frequent(nums: Vec<i32>, k: i32) -> Vec<i32> {
     }
 
     let mut counter_vec: Vec<(&i32, &u32)> = count.iter().collect();
-    counter_vec.sort_by(|a, b| a.1.cmp(b.1));
+    counter_vec.sort_by(|a, b| b.1.cmp(a.1));
     let mut res = vec![];
     for idx in 0..k as usize {
         res.push(counter_vec[idx].0.clone());
