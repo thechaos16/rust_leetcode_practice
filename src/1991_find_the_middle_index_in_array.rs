@@ -13,7 +13,7 @@ fn find_middle_index(nums: Vec<i32>) -> i32 {
     for idx in 0..nums.len() {
         if idx == 0 || idx == nums.len() - 1 {
             if sum_ - nums[idx] == 0 {
-                return 0;
+                return idx as i32;
             }
         } else {
             let left = cur_sum[idx - 1];
