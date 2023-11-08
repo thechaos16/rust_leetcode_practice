@@ -1,4 +1,5 @@
-use std::collections::LinkedList;
+use std::collections::VecDeque;
+
 
 fn main(){
     let input: &str = "{{}}";
@@ -10,29 +11,29 @@ fn main(){
 }
 
 fn is_valid(input_str: &str) -> bool {
-    let mut stack: LinkedList<char> = Default::default();
-    let mut result: bool = true;
-    for idx in 0..input_str.len() {
-        let one_char = input_str.chars().nth(idx);
-        if one_char == Some('{') || one_char == Some('[') || one_char == Some('(') {
-            stack.push_back(one_char.unwrap());
-        } else {
-            if stack.len() == 0 {
-                result = false;
-                break
-            }
-            let last_char: char = stack.pop_back().unwrap();
-            if (one_char == Some('}') && last_char == '{') || (one_char == Some(']') && last_char == '[') || (one_char == Some(')') && last_char == '(') {
-                continue;
-            } else {
-                result = false;
-                break
-            }
+    let mut stack: VecDeque<char> = VecDeque::new();
+
+    for one_char in input_str.chars() {
+        match one_char {
+            '{' | '(' | '[' => stack.push_back(one_char),
+            '}' | ')' | ']' => {
+                if stack.is_empty() {
+                    return false;
+                }
+                let last_char = stack.pop_back().unwrap();
+                if !is_matching_pair(last_char, one_char) {
+                    return false;
+                }
+            },
+            _ => return false
         }
     }
-    if stack.len() > 0 {
-        return false;
-    } else {
-        return result;
+    stack.is_empty()
+}
+
+fn is_matching_pair(left: char, right: char) -> bool {
+    match (left, right) {
+        ('{', '}') | ('(', ')') | ('[', ']') => true,
+        _ => false
     }
 }
