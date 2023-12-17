@@ -5,23 +5,14 @@ fn main() {
 
 fn is_monotonic(nums: Vec<i32>) -> bool {
     let mut last = 0;
-    for idx in 1..nums.len() {
-        let cur = nums[idx] - nums[idx - 1];
-        if cur == 0 {
-            continue;
-        } else if cur > 0 {
-            if last == -1 {
-                return false;
-            } else {
-                last = 1;
-            }
-        } else {
-            if last == 1 {
-                return false;
-            } else {
-                last = -1;
-            }
+    for window in nums.windows(2) {
+        let cur = (window[1] - window[0]).signum();
+        if last != 0 && cur != 0 && cur != last {
+            return false;
+        }
+        if cur != 0 {
+            last = cur;
         }
     }
-    return true;
+    true
 }
