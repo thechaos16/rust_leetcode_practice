@@ -17,5 +17,5 @@ fn first_uniq_char(s: String) -> i32 {
             return idx as i32;
         }
     }
-    return -1;
+    return -1;s
 }

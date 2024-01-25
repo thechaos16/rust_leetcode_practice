@@ -1,5 +1,6 @@
 use std::collections::HashMap;
 
+
 fn main() {
     let input = vec![1, 2, 3, 4, 4, 3, 1, 2];
     println!("{}", has_groups_size_x(input));
