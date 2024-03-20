@@ -10,18 +10,12 @@ fn main() {
 fn merge_similar_items(items1: Vec<Vec<i32>>, items2: Vec<Vec<i32>>) -> Vec<Vec<i32>> {
     let mut hash = HashMap::new();
     for item in items1.iter() {
-        let before_val = hash.entry(item[0]).or_insert(0);
-        *before_val += item[1];
+        *hash.entry(item[0]).or_insert(0) += item[1];
     }
     for item in items2.iter() {
-        let before_val = hash.entry(item[0]).or_insert(0);
-        *before_val += item[1];
+        *hash.entry(item[0]).or_insert(0) += item[1];
     }
-    let mut v: Vec<_> = hash.clone().into_iter().collect();
-    v.sort_by(|x, y| x.0.cmp(&y.0));
-    let mut ans = vec![];
-    for row in v.iter() {
-        ans.push(vec![row.0, row.1]);
-    }
-    return ans;
+    let mut sorted_items: Vec<_> = hash.clone().into_iter().collect();
+    sorted_items.sort_by_key(|&k| k.0);
+    return sorted_items.into_iter().map(|(k, v)| vec![k, v]).collect();
 }
