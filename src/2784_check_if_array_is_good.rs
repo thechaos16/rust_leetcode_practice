@@ -12,9 +12,15 @@ fn is_good(nums: Vec<i32>) -> bool {
         *hashmap.entry(num).or_insert(0) += 1;
     }
     for idx in 1..(nums.len() - 1) {
+        if !hashmap.contains_key(&(idx as i32)) {
+            return false;
+        }
         if *hashmap.get(&(idx as i32)).unwrap() != 1 {
             return false;
         }
+    }
+    if !hashmap.contains_key(&(nums.len() as i32 - 1)) {
+        return false;
     }
     return *hashmap.get(&(nums.len() as i32 - 1)).unwrap() == 2;
 }
