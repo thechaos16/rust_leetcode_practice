@@ -12,7 +12,7 @@ fn max_score(s: String) -> i32 {
             one_cnt += 1;
         }
     }
-    for idx in 0..s.len() {
+    for idx in 0..(s.len() - 1) {
         if s.chars().nth(idx).unwrap() == '1' {
             one_cnt -= 1;
         } else {
