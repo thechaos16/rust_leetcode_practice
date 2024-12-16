@@ -13,7 +13,7 @@ fn max_kelements(nums: Vec<i32>, k: i32) -> i64 {
     for _ in 0..k {
         let cur = heap.pop().unwrap();
         ans += cur as i64;
-        heap.push((cur as f32 / 3.0).ceil() as i32);
+        heap.push((cur as f64 / 3.0).ceil() as i32);
     }
     return ans;
 }
