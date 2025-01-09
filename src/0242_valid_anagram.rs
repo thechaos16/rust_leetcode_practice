@@ -11,29 +11,11 @@ fn is_anagram(s: String, t: String) -> bool {
     if s.len() != t.len() {
         return false;
     }
-    let mut cnt1 = HashMap::new();
-    let mut cnt2 = HashMap::new();
-    for ch in s.chars() {
-        let number = cnt1.entry(ch).or_insert(0);
-        *number += 1;
+    let mut char_counts: HashMap<char, i32> = HashMap::new();
+
+    for (s_char, t_char) in s.chars().zip(t.chars()) {
+        *char_counts.entry(s_char).or_default() += 1;
+        *char_counts.entry(t_char).or_default() -= 1;
     }
-    for ch in t.chars() {
-        let number = cnt2.entry(ch).or_insert(0);
-        *number += 1;
-    }
-    
-    let counter_vec1: Vec<(&char, &i32)> = cnt1.iter().collect();
-    for (a, b) in counter_vec1 {
-        match cnt2.get(&a) {
-           Some(child) => {
-               if *b != cnt2[a] {
-                   return false;
-               }
-           },
-           None => {
-               return false;
-           }
-        }
-    }
-    return true;
+    char_counts.values().all(|&count| count == 0)
 }
