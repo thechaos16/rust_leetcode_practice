@@ -1,3 +1,5 @@
+use std::cmp::Ordering;
+
 fn main() {
     let input1 = vec![1, 3];
     let input2 = vec![];
@@ -5,26 +7,38 @@ fn main() {
 }
 
 fn find_median_sorted_arrays(nums1: Vec<i32>, nums2: Vec<i32>) -> f64 {
-    let mut median_vec = vec![];
     let total_len = nums1.len() + nums2.len();
-    let target = total_len/ 2;
-    let mut idx1 = 0;
-    let mut idx2 = 0;
-
-    while idx1 < nums1.len() && idx2 < nums2.len() {
-        if nums1[idx1] <= nums2[idx2] {
-            median_vec.push(nums1[idx1]);
-            idx1 += 1;
-        } else {
-            median_vec.push(nums2[idx2]);
-            idx2 += 1;
+    let target = total_len / 2;
+    let (mut current, mut prev, mut idx1, mut idx2) = (0, 0, 0, 0);
+    while idx1 + idx2 <= target {
+        prev = current;
+        match (nums1.get(idx1), nums2.get(idx2)) {
+            (Some(&val1), Some(&val2)) => {
+                match val1.cmp(&val2) {
+                    Ordering::Less | Ordering::Equal => {
+                        current = val1;
+                        idx1 += 1;
+                    }
+                    Ordering::Greater => {
+                        current = val2;
+                        idx2 += 1;
+                    }
+                }
+            }
+            (Some(&val1), None) => {
+                current = val1;
+                idx1 += 1;
+            }
+            (None, Some(&val2)) => {
+                current = val2;
+                idx2 += 1;
+            }
+            (None, None) => break,
         }
     }
-    median_vec.extend_from_slice(&nums1[idx1..]);
-    median_vec.extend_from_slice(&nums2[idx2..]);
     if total_len % 2 == 1 {
-        return median_vec[target] as f64;
+        current as f64
     } else {
-        return (median_vec[target - 1] + median_vec[target]) as f64 / 2.0;
+        (current as f64 + prev as f64) / 2.0
     }
 }
