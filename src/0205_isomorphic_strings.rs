@@ -8,32 +8,25 @@ fn main() {
 }
 
 fn is_isomorphic(s: String, t: String) -> bool {
-    let mut hash1 = HashMap::new();
-    let mut hash2 = HashMap::new();
-    let mut li1 = vec![];
-    let mut li2 = vec![];
-    let mut idx: i32 = 0;
-    for ch in s.chars() {
-        if !hash1.contains_key(&ch) {
-            hash1.insert(ch, idx);
-            idx += 1;
-        }
-        let cur_val: i32 = *hash1.get(&ch).unwrap();
-        li1.push(cur_val);
+    if s.len() != t.len() {
+        return false;
     }
-    idx = 0;
-    for ch in t.chars() {
-        if !hash2.contains_key(&ch) {
-            hash2.insert(ch, idx);
-            idx += 1;
-        }
-        let cur_val: i32 = *hash2.get(&ch).unwrap();
-        li2.push(cur_val);
-    }
-    for idx in 0..li1.len() {
-        if li1[idx] != li2[idx] {
-            return false;
+    let mut hash1 = HashMap::with_capacity(s.len());
+    let mut hash2 = HashMap::with_capacity(t.len());
+
+    for (s_char, t_char) in s.chars().zip(t.chars()) {
+        match (hash1.get(&s_char), hash2.get(&t_char)) {
+            (None, None) => {
+                hash1.insert(s_char, t_char);
+                hash2.insert(t_char, s_char);
+            },
+            (Some(&mapped_t), Some(&mapped_s)) => {
+                if mapped_t != t_char || mapped_s != s_char {
+                    return false;
+                }
+            },
+            _ => return false,
         }
     }
-    return true;
+    true
 }

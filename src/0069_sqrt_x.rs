@@ -7,15 +7,12 @@ fn get_sqrt(x: i64) -> i64 {
     if x == 0 {
         return 0;
     }
-    let mut res = 1;
     for idx in 1..x {
         if idx * idx == x {
-            res = idx;
-            break;
+            return idx as i64;
         } else if idx * idx > x{
-            res = idx - 1;
-            break
+            return (idx - 1) as i64;
         }
     }
-    return res;
+    return 1 as i64;
 }
