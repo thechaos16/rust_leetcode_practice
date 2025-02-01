@@ -1,23 +1,16 @@
+use std::collections::BTreeSet;
+
 fn main() {
     let nums = vec![3, 2, 1];
     println!("{}", third_max(nums));
 }
 
 fn third_max(nums: Vec<i32>) -> i32 {
-    let mut three = vec![];
-    for num in nums {
-        if three.contains(&num) {
-            continue;
-        }
-        three.push(num);
-        three.sort();
-        three.reverse();
-        if three.len() > 3 {
-            _ = three.pop();
-        }
+    let mut unique_nums: BTreeSet<i32> = nums.iter().copied().collect();
+    if unique_nums.len() < 3 {
+        return *unique_nums.last().unwrap();
     }
-    if three.len() < 3 {
-        return three[0];
-    } 
-    return three[2];
+    _ = unique_nums.pop_last();
+    _ = unique_nums.pop_last();
+    *unique_nums.last().unwrap()
 }
