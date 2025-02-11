@@ -5,38 +5,16 @@ fn main() {
 }
 
 fn count_students(students: Vec<i32>, sandwiches: Vec<i32>) -> i32 {
-    let mut diff = 0;
-    for idx in 0..students.len() {
-        diff += students[idx];
-        diff -= sandwiches[idx];
+    let mut student_counts = [0; 2];
+    for &preference in students.iter() {
+        student_counts[preference as usize] += 1;
     }
-    if diff == 0 {
-        return 0;
-    } else if diff > 0 {
-        let mut zero_cnt = 0;
-        let mut ans = 0;
-        for idx in (0..sandwiches.len()).rev() {
-            if sandwiches[idx] == 0 {
-                zero_cnt += 1;
-            }
-            if zero_cnt == diff {
-                ans = (sandwiches.len() - idx) as i32;
-                break
-            }
+    for &sandwich in sandwiches.iter() {
+        if student_counts[sandwich as usize] > 0 {
+            student_counts[sandwich as usize] -= 1;
+        } else {
+            return student_counts[0] + student_counts[1];
         }
-        return ans;
-    } else {
-        let mut one_cnt = 0;
-        let mut ans = 0;
-        for idx in (0..sandwiches.len()).rev() {
-            if sandwiches[idx] == 1 {
-                one_cnt += 1;
-            }
-            if one_cnt == -diff {
-                ans = (sandwiches.len() - idx) as i32;
-                break
-            }
-        }
-        return ans;
     }
+    return 0;
 }
