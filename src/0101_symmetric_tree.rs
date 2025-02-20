@@ -27,36 +27,23 @@ fn main () {
 }
 
 fn is_symmetric(root: Option<Rc<RefCell<TreeNode>>>) -> bool {
-    if root.is_none() {
-        return true;
-    }
-    let mut left_vec = vec![];
-    let mut right_vec = vec![];
-    left_vec.push(root.clone().unwrap().borrow().left.clone());
-    right_vec.push(root.clone().unwrap().borrow().right.clone());
-    while left_vec.len() == right_vec.len() && left_vec.len() != 0 {
-        let mut left_next = vec![];
-        let mut right_next = vec![];
-        for idx in 0..left_vec.len() {
-            let left_node = left_vec[idx].clone();
-            let right_node = right_vec[idx].clone();
-            if (left_node.is_none() && !right_node.is_none()) || (!left_node.is_none() && right_node.is_none()) {
-                return false;
-            }
-            if left_node.is_none() && right_node.is_none() {
-                continue;
-            }
-            if left_node.clone().unwrap().borrow().val != right_node.clone().unwrap().borrow().val {
-                return false;
-            }
-            left_next.push(left_node.clone().unwrap().borrow().left.clone());
-            left_next.push(left_node.clone().unwrap().borrow().right.clone());
-            
-            right_next.push(right_node.clone().unwrap().borrow().right.clone());
-            right_next.push(right_node.clone().unwrap().borrow().left.clone());
+    match root {
+        None => true,
+        Some(node) => {
+            let borrowed = node.borrow();
+            is_symmetric_subtrees(&borrowed.left, &borrowed.right)
         }
-        left_vec = left_next;
-        right_vec = right_next;
     }
-    return true;
+}
+
+fn is_symmetric_subtrees(left: &Option<Rc<RefCell<TreeNode>>>, right: &Option<Rc<RefCell<TreeNode>>>) -> bool {
+    match (left, right) {
+        (None, None) => true,
+        (Some(l), Some(r)) => {
+            let l_borrowed = l.borrow();
+            let r_borrowed = r.borrow();
+            l_borrowed.val == r_borrowed.val && is_symmetric_subtrees(&l_borrowed.left, &r_borrowed.right) && is_symmetric_subtrees(&l_borrowed.right, &r_borrowed.left)
+        },
+        _ => false
+    }
 }
