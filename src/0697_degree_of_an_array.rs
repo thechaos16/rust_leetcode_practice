@@ -7,31 +7,13 @@ fn main () {
 }
 
 fn find_shortest_sub_array(nums: Vec<i32>) -> i32 {
-    let mut hash = HashMap::new();
-    let mut min_idx:HashMap<i32, i32> = HashMap::new();
-    let mut max_idx:HashMap<i32, i32> = HashMap::new();
+    let mut hash_data: HashMap<i32, (usize, usize, usize)> = HashMap::new();
     let mut max_val = 0;
-    let mut max_elem = vec![];
-    for idx in 0..nums.len() {
-        let before_cnt = hash.entry(nums[idx]).or_insert(0);
-        *before_cnt += 1;
-        if *before_cnt > max_val {
-            max_val = *before_cnt;
-            max_elem = vec![nums[idx]];
-        } else if *before_cnt == max_val {
-            max_elem.push(nums[idx]);
-        }
-        if !min_idx.contains_key(&nums[idx]) {
-            min_idx.insert(nums[idx], idx as i32);
-        }
-        max_idx.insert(nums[idx], idx as i32);
+    for (idx, &num) in nums.iter().enumerate() {
+        let before_cnt = hash_data.entry(num).or_insert((0, idx, idx));
+        before_cnt.0 += 1;
+        before_cnt.2 = idx;
+        max_val = max_val.max(before_cnt.0);
     }
-    let mut answer = nums.len() as i32;
-    for idx in 0..max_elem.len() {
-        let cur = max_idx[&max_elem[idx]] - min_idx[&max_elem[idx]] + 1;
-        if cur < answer {
-            answer = cur;
-        }
-    }
-    return answer;
+    hash_data.values().filter(|&&(freq, _, _)| freq ==max_val).map(|&(_, first, last)| (last - first + 1) as i32).min().unwrap_or(0)
 }
