@@ -9,29 +9,15 @@ fn main() {
 }
 
 fn relative_sort_array(arr1: Vec<i32>, arr2: Vec<i32>) -> Vec<i32> {
-    let mut arr2_hashmap = HashMap::<i32, usize>::new();
-    for idx in 0..arr2.len() {
-        arr2_hashmap.insert(arr2[idx], idx);
-    }
+    let position_map: HashMap<_, _> = arr2.iter().enumerate().map(|(idx, &num)| (num, idx)).collect();
     let mut arr1_mut = arr1;
-    arr1_mut.sort_by(|a, b| {
-        if arr2_hashmap.contains_key(&a) && arr2_hashmap.contains_key(&b) {
-            if arr2_hashmap.get(a) > arr2_hashmap.get(b) {
-                Ordering::Greater
-            } else {
-                Ordering::Less
-            }
-        } else if arr2_hashmap.contains_key(&a) && !arr2_hashmap.contains_key(&b) {
-            Ordering::Less
-        } else if !arr2_hashmap.contains_key(&a) && arr2_hashmap.contains_key(&b) {
-            Ordering::Greater
-        } else {
-            if a > b {
-                Ordering::Greater
-            } else {
-                Ordering::Less
-            }
+    arr1_mut.sort_by(|&a, &b| {
+        match (position_map.get(&a), position_map.get(&b)) {
+            (Some(&pos_a), Some(&pos_b)) => pos_a.cmp(&pos_b),
+            (Some(_), None) => Ordering::Less,
+            (None, Some(_)) => Ordering::Greater,
+            (None, None) => a.cmp(&b),
         }
     });
-    return arr1_mut;
+    arr1_mut
 }
