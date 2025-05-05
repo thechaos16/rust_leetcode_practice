@@ -1,4 +1,3 @@
-use std::cmp;
 use std::collections::HashMap;
 
 
@@ -8,15 +7,18 @@ fn main() {
 }
 
 fn max_length_between_equal_charcters(s: String) -> i32 {
-    let mut hashmap: HashMap<char, i32> = HashMap::new();
+    let mut hashmap: HashMap<char, i32> = HashMap::with_capacity(26);
     let mut max_val = -1;
     for (idx, ch) in s.chars().enumerate() {
-        if hashmap.contains_key(&ch) {
-            let cur_val = (idx as i32) - hashmap.get(&ch).unwrap() - 1;
-            max_val = cmp::max(max_val, cur_val);
-        } else {
-            hashmap.insert(ch, idx as i32);
+        match hashmap.get(&ch) {
+            Some(&value) => {
+                let cur_val = idx as i32 - value - 1;
+                max_val = max_val.max(cur_val);
+            }
+            None => {
+                hashmap.insert(ch, idx as i32);
+            }
         }
     }
-    return max_val;
+    max_val
 }
