@@ -4,16 +4,5 @@ fn main() {
 }
 
 fn three_consecutive_odds(arr: Vec<i32>) -> bool {
-    let mut odd_cnt = 0;
-    for num in arr.iter() {
-        if num % 2 == 0 {
-            odd_cnt = 0;
-        } else {
-            odd_cnt += 1;
-            if odd_cnt == 3 {
-                return true;
-            }
-        }
-    }
-    return false;
+    arr.iter().map(|num| num % 2 == 1).collect::<Vec<bool>>().windows(3).any(|window| window.iter().all(|&is_odd| is_odd))
 }
